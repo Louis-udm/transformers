@@ -55,7 +55,7 @@ _CONFIG_FOR_DOC = "VGCNBertConfig"
 
 VGCNBERT_PRETRAINED_MODEL_ARCHIVE_LIST = [
     "zhibinlu/vgcn-bert-distilbert-base-uncased",
-    # See all VGCN-BERT models at https://huggingface.co/models?filter=VGCNBert
+    # See all VGCN-BERT models at https://huggingface.co/models?filter=vgcn-bert
 ]
 
 
