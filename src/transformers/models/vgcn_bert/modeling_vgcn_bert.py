@@ -1,5 +1,4 @@
 # coding=utf-8
-# Copyright 2019-present, the HuggingFace Inc. team, The Google AI Language Team and Facebook, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +13,8 @@
 # limitations under the License.
 
 """
- PyTorch VGCN-BERT model adapted in part from Facebook, Inc XLM model (https://github.com/facebookresearch/XLM) and in
- part from HuggingFace PyTorch version of Google AI Bert model (https://github.com/google-research/bert)
+New VGCN-BERT model
+Paper: https://arxiv.org/abs/2004.05707
 """
 
 
@@ -28,9 +27,9 @@ from torch import nn
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 from transformers.configuration_utils import PretrainedConfig
 
-from ...activations import get_activation
-from ...deepspeed import is_deepspeed_zero3_enabled
-from ...modeling_outputs import (
+from transformers.activations import get_activation
+from transformers.deepspeed import is_deepspeed_zero3_enabled
+from transformers.modeling_outputs import (
     BaseModelOutput,
     MaskedLMOutput,
     MultipleChoiceModelOutput,
@@ -38,9 +37,9 @@ from ...modeling_outputs import (
     SequenceClassifierOutput,
     TokenClassifierOutput,
 )
-from ...modeling_utils import PreTrainedModel
-from ...pytorch_utils import apply_chunking_to_forward, find_pruneable_heads_and_indices, prune_linear_layer
-from ...utils import (
+from transformers.modeling_utils import PreTrainedModel
+from transformers.pytorch_utils import apply_chunking_to_forward, find_pruneable_heads_and_indices, prune_linear_layer
+from transformers.utils import (
     add_code_sample_docstrings,
     add_start_docstrings,
     add_start_docstrings_to_model_forward,
@@ -51,11 +50,11 @@ from .configuration_vgcn_bert import VGCNBertConfig
 
 
 logger = logging.get_logger(__name__)
-_CHECKPOINT_FOR_DOC = "zhibinlu/vgcn-distilbert-base-uncased"
+_CHECKPOINT_FOR_DOC = "zhibinlu/vgcn-bert-distilbert-base-uncased"
 _CONFIG_FOR_DOC = "VGCNBertConfig"
 
 VGCNBERT_PRETRAINED_MODEL_ARCHIVE_LIST = [
-    "zhibinlu/vgcn-distilbert-base-uncased",
+    "zhibinlu/vgcn-bert-distilbert-base-uncased",
     # See all VGCN-BERT models at https://huggingface.co/models?filter=VGCNBert
 ]
 
@@ -392,7 +391,6 @@ class VGCNEmbeddings(nn.Module):
         embeddings = input_embeds + position_embeddings  # (bs, max_seq_length, dim)
 
         if self.vgcn_graph_embds_dim > 0:
-            # TODO: check input_ids/position_ids donot include [CLS], [SEP][SEP]
             graph_embeds = self.vgcn(self.word_embeddings, input_ids)  # , position_ids)
 
             # vgcn_words_embeddings = input_embeds.clone()
